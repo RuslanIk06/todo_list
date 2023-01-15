@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 
 import 'package:todo_list/models/todo_item.dart';
+import 'package:todo_list/utils/network_manager.dart';
 
 class ItemWidget extends StatelessWidget {
   final TodoItem todoItem;
   const ItemWidget({
     Key? key,
     required this.todoItem,
+    required this.handleRefresh,
   }) : super(key: key);
+
+  final Function() handleRefresh;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: todoItem.isDone ? Colors.grey : Colors.white,
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +39,12 @@ class ItemWidget extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await NetworkManager().updateData(
+                    todoItem.copyWith(isDone: true),
+                  );
+                  handleRefresh();
+                },
                 child: const Icon(Icons.check),
               ),
             const SizedBox(width: 8),
@@ -44,7 +53,10 @@ class ItemWidget extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await NetworkManager().deleteData(todoItem);
+                  handleRefresh();
+                },
                 child: const Icon(Icons.delete_forever),
               )
           ],

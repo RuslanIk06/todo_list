@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/models/todo_item.dart';
+import 'package:todo_list/pages/form_page.dart';
 import 'package:todo_list/utils/network_manager.dart';
 import 'package:todo_list/widgets/item_widget.dart';
 
@@ -35,7 +36,6 @@ class _TodoListPageState extends State<TodoListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     refreshData();
   }
@@ -47,7 +47,7 @@ class _TodoListPageState extends State<TodoListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todo List"),
+        title: const Text("Todo List"),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -69,7 +69,8 @@ class _TodoListPageState extends State<TodoListPage> {
                   onPressed: () {},
                   child: Text(
                     "Sudah diselesaikan $totalDone",
-                    style: TextStyle(decoration: TextDecoration.underline),
+                    style:
+                        const TextStyle(decoration: TextDecoration.underline),
                   ),
                 )
               ],
@@ -85,9 +86,11 @@ class _TodoListPageState extends State<TodoListPage> {
                             child: Text("tidak ada data"),
                           )
                         : ListView.builder(
+                            reverse: true,
                             itemBuilder: (context, index) {
                               return ItemWidget(
                                 todoItem: todos[index],
+                                handleRefresh: refreshData,
                               );
                             },
                             itemCount: todos.length,
@@ -97,7 +100,14 @@ class _TodoListPageState extends State<TodoListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const FormPage(),
+            ),
+          );
+          refreshData();
+        },
         child: const Icon(Icons.add),
       ),
     );
