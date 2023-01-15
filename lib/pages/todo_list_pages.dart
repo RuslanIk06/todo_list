@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/models/todo_item.dart';
+import 'package:todo_list/utils/network_manager.dart';
+import 'package:todo_list/widgets/item_widget.dart';
 
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
@@ -12,6 +14,31 @@ class _TodoListPageState extends State<TodoListPage> {
   List<TodoItem> todos = [];
   bool isLoading = false;
   int totalDone = 0;
+
+  void refreshData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    NetworkManager().getTodoIsDone(true).then((value) {
+      totalDone = value.length;
+      setState(() {});
+    });
+
+    NetworkManager().getTodoIsDone(false).then((value) {
+      todos = value;
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refreshData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +84,14 @@ class _TodoListPageState extends State<TodoListPage> {
                         ? const Center(
                             child: Text("tidak ada data"),
                           )
-                        : const SizedBox(),
+                        : ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ItemWidget(
+                                todoItem: todos[index],
+                              );
+                            },
+                            itemCount: todos.length,
+                          ),
                   )
           ],
         ),
