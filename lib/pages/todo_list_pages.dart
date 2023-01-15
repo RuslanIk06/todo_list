@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/models/todo_item.dart';
 import 'package:todo_list/pages/form_page.dart';
+import 'package:todo_list/pages/todo_done_page.dart';
 import 'package:todo_list/utils/network_manager.dart';
 import 'package:todo_list/widgets/item_widget.dart';
 
@@ -66,7 +67,12 @@ class _TodoListPageState extends State<TodoListPage> {
                   style: textTheme.bodyMedium,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TodoDonePage()));
+                  },
                   child: Text(
                     "Sudah diselesaikan $totalDone",
                     style:
@@ -86,7 +92,7 @@ class _TodoListPageState extends State<TodoListPage> {
                             child: Text("tidak ada data"),
                           )
                         : ListView.builder(
-                            reverse: true,
+                            reverse: false,
                             itemBuilder: (context, index) {
                               return ItemWidget(
                                 todoItem: todos[index],
