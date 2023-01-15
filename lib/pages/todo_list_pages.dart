@@ -69,9 +69,11 @@ class _TodoListPageState extends State<TodoListPage> {
                 TextButton(
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TodoDonePage()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TodoDonePage(),
+                      ),
+                    );
                   },
                   child: Text(
                     "Sudah diselesaikan $totalDone",
